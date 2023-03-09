@@ -2,6 +2,7 @@ package com.hh.community.community.service;
 
 import com.hh.community.community.Model.Question;
 import com.hh.community.community.Model.User;
+import com.hh.community.community.dto.PaginationDTO;
 import com.hh.community.community.dto.QuestionDTO;
 import com.hh.community.community.mapper.QuestionMapper;
 import com.hh.community.community.mapper.UserMapper;
@@ -24,22 +25,40 @@ public class QuestionService {
     @Autowired
     private UserMapper userMapper;
 
-    public List<QuestionDTO> findAllQuestion() {
+    public PaginationDTO findAllQuestion(Integer page, Integer size) {
+
+        PaginationDTO paginationDTO = new PaginationDTO();
+        Integer totalCount = questionMapper.count();
+        paginationDTO.setPagination(totalCount,page,size);
+
+        if (page < 1){
+            page = 1;
+        }
+        if (page > paginationDTO.getTotalPage()){
+            page = paginationDTO.getTotalPage();
+        }
+
+        // 计算页码
+        Integer offset = size * (page - 1);
         // 先获取 所有问题
-        List<Question> questions = questionMapper.findAllQuestion();
+        List<Question> questions = questionMapper.findAllQuestion(offset, size);
         List<QuestionDTO> questionDTOList = new ArrayList<>();
+
         for (Question question : questions) {
             //遍历所有问题 通过问题中的创造者 然后找到 对应的用户
             User user = userMapper.findById(question.getCreator());
             // 新建一个QuestionDTO 对象，多了User 的question类
             QuestionDTO questionDTO = new QuestionDTO();
             // BeanUtils.copyProperties 直接帮助我们setAttribute
-            BeanUtils.copyProperties(question,questionDTO);
+            BeanUtils.copyProperties(question, questionDTO);
             // 最后加上user
             questionDTO.setUser(user);
             // 添加到要返回的列表中
             questionDTOList.add(questionDTO);
         }
-        return questionDTOList;
+        // 放进分页数据中
+        paginationDTO.setQuestions(questionDTOList);
+
+        return paginationDTO;
     }
 }
