@@ -27,10 +27,12 @@ public class PaginationDTO {
 
         this.page = page;
 
-
-        if (totalCount % size == 0) {
+        if (totalCount == 0){
+            totalPage = 1;
+        }else if (totalCount % size == 0) {
             totalPage = totalCount / size;
-        } else {
+        }
+        else{
             totalPage = totalCount / size + 1;
         }
 

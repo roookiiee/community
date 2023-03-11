@@ -99,4 +99,22 @@ public class QuestionService {
         return paginationDTO;
 
     }
+
+    public QuestionDTO getById(Integer id) {
+        Question question= questionMapper.getById(id);
+        QuestionDTO questionDTO = new QuestionDTO();
+        BeanUtils.copyProperties(question,questionDTO);
+        questionDTO.setUser(userMapper.findById(questionDTO.getCreator()));
+        return questionDTO;
+    }
+
+    public void createOrUpdate(Question question) {
+        if (question.getId() != null){
+            questionMapper.edit(question);
+        }else {
+            questionMapper.create(question);
+        }
+    }
+
+
 }
