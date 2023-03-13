@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    <mapper namespace="com.hh.community.community.mapper.UserMapper">
+<!--    <select id="userListById" resultType="com.hh.community.community.Model.User">-->
+<!--        select-->
+<!--        *-->
+<!--        from `user`-->
+<!--        where id in-->
+<!--            <foreach collection="userIds" index="index" item="id" open="(" separator="," close=")">-->
+<!--                #{index}-->
+<!--            </foreach>-->
+<!--    </select>-->
+
+    <select id="findById" resultType="com.hh.community.community.Model.User">
+        select * from `user` where id = #{id}
+    </select>
+</mapper>

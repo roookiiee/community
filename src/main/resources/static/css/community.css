@@ -21,3 +21,30 @@ body{
     font-weight: normal;
     color: #999;
 }
+
+.comment{
+    margin: 10px 0;
+}
+
+.commentBtn{
+    float: right;
+    margin-bottom: 10px;
+}
+
+.comment-sp{
+    margin-top: 0;
+}
+
+.menu{
+    color: #999;
+}
+
+.menu .icon{
+    margin-right: 6px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.menu .icon:hover{
+    color:#499ef3;
+}

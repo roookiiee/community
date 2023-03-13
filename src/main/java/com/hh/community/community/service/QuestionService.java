@@ -4,6 +4,8 @@ import com.hh.community.community.Model.Question;
 import com.hh.community.community.Model.User;
 import com.hh.community.community.dto.PaginationDTO;
 import com.hh.community.community.dto.QuestionDTO;
+import com.hh.community.community.exception.CustomizeErrorCode;
+import com.hh.community.community.exception.CustomizeException;
 import com.hh.community.community.mapper.QuestionMapper;
 import com.hh.community.community.mapper.UserMapper;
 import org.springframework.beans.BeanUtils;
@@ -62,7 +64,7 @@ public class QuestionService {
         return paginationDTO;
     }
 
-    public PaginationDTO findQuestionByUser(Integer id, Integer page, Integer size) {
+    public PaginationDTO findQuestionByUser(Long id, Integer page, Integer size) {
 
         PaginationDTO paginationDTO = new PaginationDTO();
         Integer totalCount = questionMapper.countByUserId(id);
@@ -100,9 +102,16 @@ public class QuestionService {
 
     }
 
-    public QuestionDTO getById(Integer id) {
+    public QuestionDTO getById(Long id) {
         Question question= questionMapper.getById(id);
+
         QuestionDTO questionDTO = new QuestionDTO();
+        if (question == null){
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+        }
+
+        //每查询一次就增加一次阅读次数
+        questionMapper.viewCountAdd(id);
         BeanUtils.copyProperties(question,questionDTO);
         questionDTO.setUser(userMapper.findById(questionDTO.getCreator()));
         return questionDTO;
@@ -115,6 +124,5 @@ public class QuestionService {
             questionMapper.create(question);
         }
     }
-
 
 }
